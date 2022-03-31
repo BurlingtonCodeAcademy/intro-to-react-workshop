@@ -1,48 +1,33 @@
-import logo from "./logo.svg";
+import React, { useEffect, useState } from 'react';
 import "./App.css";
 
 function App() {
+  let url = "https://pokeapi.co/api/v2/pokemon" // this data does not change, useState is not needed
+  let [pokemonList, setPokemonList] = useState([]) // this data changes, useState is needed
+
+  const getPokemon = async () => {
+    // async makes the function return a Promise⭐️
+    let response = await fetch(url)
+    let data = await response.json()
+
+    setPokemonList(data.results)
+  }
+
+  /* 
+  ⭐️useEffect expects a function that returns nothing OR returns another function
+  
+  our async function returns a Promise, so we wrap it in an anonymous function to block getPokemon's return in a different scope.
+  */
+  useEffect(() => { getPokemon() }, [/* leave this array empty to make sure out getPokemon function only runs once */])
+
+  let pokemonElements = pokemonList.map((pokemon) => {
+    <Card url="" />
+  })
+
   return (
     <div className="App">
-      <h1>
-        Introduction to React Workshop
-      </h1>
-      <h2>
-        Today we are going to build a simple application to practice two key
-        skills:
-      </h2>
+      {/* fetch pokemon list and render Cards */}
 
-      <ul>
-        <li> Rendering things using React</li>
-        <li> Fetching data from an API</li>
-      </ul>
-
-      <h2>To do this we will</h2>
-      <ul>
-        <li >
-          Make a parent <span >and</span> child
-          component
-        </li>
-        <li >
-          Use the Fetch API <span >in</span> both
-          components
-        </li>
-        <li>In the parent component (App)</li>
-        <ul >
-          <li>
-            We will fetch a list of pokemon from this
-            url:
-            https://pokeapi.co/api/v2/pokemon
-
-          </li>
-        </ul>
-        <li>In the child component (Card)</li>
-        <ul>
-          <li >
-            We will fetch an individual pokemon's information using a different url for each pokemon
-          </li>
-        </ul>
-      </ul>
     </div>
   );
 }
